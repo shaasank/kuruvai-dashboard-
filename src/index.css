@@ -26,9 +26,48 @@
 @layer base {
   * {
     @apply border-border;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
   }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
+    min-height: 100dvh;
   }
 }
+
+/* ── Utility: hide scrollbar but keep scroll ────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── iPhone safe-area bottom padding ────────────────────────────────── */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Thin scrollbar for data tables ────────────────────────────────── */
+.thin-scroll::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+

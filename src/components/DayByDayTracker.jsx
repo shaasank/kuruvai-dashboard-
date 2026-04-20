@@ -1,16 +1,20 @@
 import React, { useMemo, useState } from 'react';
-import { format, parseISO, isToday, isPast, isFuture } from 'date-fns';
-import { CalendarDays, CheckCircle2, CircleDashed, Clock } from 'lucide-react';
+import { format, parseISO, isToday } from 'date-fns';
+import { CalendarDays, CheckCircle2, CircleDashed, Clock, MapPin, User, ChevronRight } from 'lucide-react';
 
 const ActivityIcon = ({ activity }) => {
-  if (activity.includes('Sowing') || activity.includes('Transplant')) return <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center"><CalendarDays className="w-4 h-4" /></div>;
-  if (activity.includes('Fertilizer') || activity.includes('Weedicide') || activity.includes('Protection')) return <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><Clock className="w-4 h-4" /></div>;
-  if (activity.includes('Harvest')) return <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center"><CheckCircle2 className="w-4 h-4" /></div>;
-  return <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center"><CircleDashed className="w-4 h-4" /></div>;
+  const act = String(activity).toLowerCase();
+  if (act.includes('sowing') || act.includes('transplant')) 
+    return <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-sm shadow-emerald-50"><CalendarDays className="w-5 h-5" /></div>;
+  if (act.includes('fertilizer') || act.includes('weedicide') || act.includes('protection')) 
+    return <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center shadow-sm shadow-blue-50"><Clock className="w-5 h-5" /></div>;
+  if (act.includes('harvest')) 
+    return <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shadow-sm shadow-amber-50"><CheckCircle2 className="w-5 h-5" /></div>;
+  return <div className="w-10 h-10 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shadow-sm shadow-slate-50"><CircleDashed className="w-5 h-5" /></div>;
 };
 
 const DayByDayTracker = ({ calendarData }) => {
-  const [filterMode, setFilterMode] = useState('all'); // 'all', 'upcoming', 'past'
+  const [filterMode, setFilterMode] = useState('all');
 
   const sortedDates = useMemo(() => {
     return Object.keys(calendarData).sort((a, b) => new Date(a) - new Date(b));
@@ -18,7 +22,6 @@ const DayByDayTracker = ({ calendarData }) => {
 
   const filteredDates = useMemo(() => {
     const now = new Date();
-    // Normalize now to start of day for accurate past/future comparison
     now.setHours(0, 0, 0, 0); 
 
     return sortedDates.filter(dateStr => {
@@ -30,21 +33,18 @@ const DayByDayTracker = ({ calendarData }) => {
   }, [sortedDates, filterMode]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-      <div className="p-6 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50">
-        <div>
-          <h2 className="text-xl font-bold text-slate-800">Day-by-Day Activity Tracker</h2>
-          <p className="text-sm text-slate-500 mt-1">Timeline of agricultural activities showing only days with scheduled work.</p>
-        </div>
-        
-        <div className="flex bg-slate-200/50 p-1 rounded-lg">
+    <div className="space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      
+      {/* ── HEADER & FILTERS ───────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div className="flex bg-white p-1.5 rounded-2xl border border-slate-100 shadow-sm w-full sm:w-auto">
           {['all', 'upcoming', 'past'].map((mode) => (
             <button
               key={mode}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
+              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 ${
                 filterMode === mode 
-                  ? 'bg-white text-slate-800 shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-100' 
+                  : 'text-slate-400 hover:text-slate-700'
               }`}
               onClick={() => setFilterMode(mode)}
             >
@@ -54,61 +54,77 @@ const DayByDayTracker = ({ calendarData }) => {
         </div>
       </div>
 
-      <div className="p-6">
+      {/* ── TIMELINE ───────────────────────────────────────────────── */}
+      <div className="relative">
         {filteredDates.length === 0 ? (
-          <div className="text-center py-12 text-slate-500">
-            <CalendarDays className="w-12 h-12 mx-auto text-slate-300 mb-3" />
-            <p>No activities found for the selected filter.</p>
+          <div className="bg-white rounded-3xl p-16 text-center border border-slate-100 shadow-sm">
+            <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <CalendarDays className="w-8 h-8 text-slate-200" />
+            </div>
+            <p className="text-slate-400 font-bold uppercase text-xs tracking-widest">No activities scheduled</p>
           </div>
         ) : (
-          <div className="space-y-8">
-            {filteredDates.map(dateStr => {
+          <div className="space-y-12">
+            {filteredDates.map((dateStr, dateIdx) => {
               const activities = calendarData[dateStr];
               const dateObj = parseISO(dateStr);
               const isTodayDate = isToday(dateObj);
               
               return (
-                <div key={dateStr} className="relative pl-4 sm:pl-0">
-                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
+                <div key={dateStr} className="relative">
+                  {/* Vertical Line for Desktop */}
+                  {dateIdx < filteredDates.length - 1 && (
+                    <div className="absolute left-[20px] sm:left-[210px] top-[80px] bottom-[-48px] w-0.5 bg-gradient-to-b from-slate-100 to-transparent hidden sm:block"></div>
+                  )}
+
+                  <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
                     {/* Date Sidebar */}
-                    <div className="sm:w-48 shrink-0 relative z-10">
-                      <div className={`sticky top-20 p-4 rounded-xl border ${
+                    <div className="sm:w-40 shrink-0">
+                      <div className={`p-4 sm:p-5 rounded-3xl border transition-all duration-500 ${
                         isTodayDate 
-                          ? 'bg-emerald-50 border-emerald-200 text-emerald-800 shadow-sm' 
-                          : 'bg-slate-50 border-slate-100 text-slate-700'
+                          ? 'bg-emerald-600 border-emerald-500 text-white shadow-xl shadow-emerald-100 scale-105' 
+                          : 'bg-white border-slate-100 text-slate-900 shadow-sm'
                       }`}>
-                        <div className="text-sm font-semibold uppercase tracking-wider mb-1">
-                          {isTodayDate ? 'Today' : format(dateObj, 'EEEE')}
+                        <div className={`text-[10px] font-black uppercase tracking-widest mb-1 ${isTodayDate ? 'text-emerald-100' : 'text-slate-400'}`}>
+                          {format(dateObj, 'EEEE')}
                         </div>
-                        <div className="text-2xl font-bold">
+                        <div className="text-2xl sm:text-3xl font-black tracking-tighter">
                           {format(dateObj, 'MMM d')}
                         </div>
-                        <div className="text-xs mt-1 text-slate-500 font-medium">
-                          {activities.length} Action{activities.length > 1 ? 's' : ''}
+                        <div className={`text-[9px] mt-2 font-black uppercase tracking-wider flex items-center gap-1.5 ${isTodayDate ? 'text-emerald-100' : 'text-slate-400'}`}>
+                          <div className={`w-1.5 h-1.5 rounded-full ${isTodayDate ? 'bg-white animate-pulse' : 'bg-slate-200'}`}></div>
+                          {activities.length} Task{activities.length > 1 ? 's' : ''}
                         </div>
                       </div>
                     </div>
 
                     {/* Activities List */}
-                    <div className="flex-1 space-y-3">
+                    <div className="flex-1 space-y-4">
                       {activities.map((act, idx) => (
-                        <div key={idx} className="flex items-center gap-4 bg-white border border-slate-100 p-4 rounded-xl hover:border-emerald-200 hover:shadow-sm transition-all">
+                        <div key={idx} className="group relative bg-white border border-slate-100 p-5 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 flex items-center gap-5">
                           <ActivityIcon activity={act.activity} />
-                          <div className="flex-1">
-                            <h4 className="font-bold text-slate-800">{act.activity}</h4>
-                            <p className="text-sm text-slate-500 mt-0.5">
-                              Farmer: <span className="font-semibold text-slate-700">{act.farmerName}</span> 
-                              {" • "}Village: <span className="font-medium">{act.village}</span>
-                            </p>
+                          
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm sm:text-base font-black text-slate-900 uppercase tracking-tight truncate group-hover:text-emerald-600 transition-colors">
+                              {act.activity}
+                            </h4>
+                            
+                            <div className="mt-2 flex flex-wrap items-center gap-y-1 gap-x-4">
+                              <div className="flex items-center gap-1.5">
+                                <User className="w-3 h-3 text-slate-300" />
+                                <span className="text-[11px] font-bold text-slate-500">{act.farmerName}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <MapPin className="w-3 h-3 text-slate-300" />
+                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">{act.village}</span>
+                              </div>
+                            </div>
                           </div>
+
                           <div className="hidden sm:block">
-                            <span className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${
-                              act.status.toLowerCase() === 'active' 
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
-                                : 'bg-slate-100 text-slate-600 border-slate-200'
-                            }`}>
-                              {act.status || 'Unknown'}
-                            </span>
+                            <div className="p-2 rounded-full bg-slate-50 group-hover:bg-emerald-50 transition-colors">
+                              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-500 transition-colors" />
+                            </div>
                           </div>
                         </div>
                       ))}
