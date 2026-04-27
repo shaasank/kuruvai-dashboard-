@@ -44,6 +44,7 @@ export const processData = ({ active = [], deleted = [], initial = [] }) => {
   const remarksCount = {};
 
   let confirmedCount = 0;
+  let confirmedAcres = 0;
   let notConfirmedCount = 0;
   let sownCount = 0;
   let notSownCount = 0;
@@ -119,6 +120,7 @@ export const processData = ({ active = [], deleted = [], initial = [] }) => {
     // New specific KPIs tracking
     if (norm.Confirm.toLowerCase() === 'yes') {
       confirmedCount++;
+      confirmedAcres += norm.Acre;
     } else {
       notConfirmedCount++;
     }
@@ -245,6 +247,7 @@ export const processData = ({ active = [], deleted = [], initial = [] }) => {
       yieldProgress: parseFloat(yieldProgress.toFixed(1)),
       activeFields,
       confirmedCount,
+      confirmedAcres: parseFloat(confirmedAcres.toFixed(2)),
       notConfirmedCount,
       sownCount,
       notSownCount,
