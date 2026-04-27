@@ -127,7 +127,7 @@ const AnalyticsCharts = ({ charts }) => {
         </ChartCard>
 
         {/* Procurement Overview */}
-        <ChartCard title="Procurement Status" subtitle="Overall distribution of farmers">
+        <ChartCard title="Famers Distribution" subtitle="Overall distribution of farmers based on procurement status history">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
