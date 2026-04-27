@@ -9,7 +9,6 @@ import {
 import KPIGrid from './KPIGrid';
 import FarmerGrid from './FarmerGrid';
 import AnalyticsCharts from './AnalyticsCharts';
-import DayByDayTracker from './DayByDayTracker';
 
 const Dashboard = () => {
   const { data, loading, error, lastFetched, refetch } = useSheetData();
@@ -27,7 +26,6 @@ const Dashboard = () => {
 
   const navItems = [
     { id: 'overview', label: 'Analytics', icon: BarChart3 },
-    { id: 'schedule', label: 'Timeline', icon: Activity },
     { id: 'farmers',  label: 'Database', icon: Users },
   ];
 
@@ -183,10 +181,6 @@ const Dashboard = () => {
                   <KPIGrid stats={processed.stats} />
                   <AnalyticsCharts charts={processed.charts} />
                 </div>
-              )}
-
-              {activeTab === 'schedule' && (
-                <DayByDayTracker calendarData={processed.calendarActivities} />
               )}
 
               {activeTab === 'farmers' && (
