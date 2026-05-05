@@ -7,7 +7,7 @@ export const processData = ({ active = [], deleted = [], initial = [] }) => {
   
   if (!rawData || rawData.length === 0) return { 
     farmers: [], 
-    stats: { targetYield: 2500 }, 
+    stats: { targetYield: 2000 }, 
     charts: { remarksData: [], rejectedByRemark: [] } 
   };
 
@@ -36,7 +36,7 @@ export const processData = ({ active = [], deleted = [], initial = [] }) => {
   let totalYield = 0;
   let activeFields = 0;
 
-  const targetYield = 2500; // Tons target
+  const targetYield = 2000; // Tons target
 
   const talukYield = {};
   const assignedToStats = {};

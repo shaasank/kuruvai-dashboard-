@@ -159,8 +159,8 @@ const AnalyticsCharts = ({ charts }) => {
       {/* ── SUPERVISOR PERFORMANCE BAR CHART ────────────────────────── */}
       <ChartCard
         title="Team Workload Overview"
-        subtitle="Performance vs 625 MT target per supervisor"
-        badge="625 MT / person"
+        subtitle="Performance vs 500 MT target per supervisor"
+        badge="500 MT / person"
         badgeColor="bg-purple-100 text-purple-700"
         heightClass="h-[400px]"
       >
@@ -173,12 +173,12 @@ const AnalyticsCharts = ({ charts }) => {
             <Legend verticalAlign="top" align="right" height={40} iconType="circle" iconSize={8} formatter={(val) => <span className="text-[10px] font-bold text-slate-400 uppercase">{val}</span>} />
             {/* 625 MT Target Reference Line */}
             <ReferenceLine
-              y={625}
+              y={500}
               stroke="#8b5cf6"
               strokeDasharray="6 3"
               strokeWidth={2}
               label={{
-                value: ' Target 625 MT',
+                value: ' Target 500 MT',
                 position: 'insideTopRight',
                 fill: '#8b5cf6',
                 fontSize: 10,
@@ -203,17 +203,17 @@ const AnalyticsCharts = ({ charts }) => {
         <div className="p-5 sm:p-7 border-b border-slate-50 flex items-start justify-between gap-4">
           <div>
             <h3 className="text-sm sm:text-lg font-black text-slate-900 tracking-tight leading-none uppercase">Team Workload Details</h3>
-            <p className="text-[10px] sm:text-xs text-slate-400 mt-1.5 font-bold uppercase tracking-wide">Progress vs 625 MT target per field officer</p>
+            <p className="text-[10px] sm:text-xs text-slate-400 mt-1.5 font-bold uppercase tracking-wide">Progress vs 500 MT target per field officer</p>
           </div>
           <span className="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700">
-            Target 625 MT
+            Target 500 MT
           </span>
         </div>
         <div className="p-4 sm:p-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {(charts.supervisorComparison || []).map((s) => {
-              const pct = Math.min(100, ((s.yield || 0) / 625) * 100);
-              const remaining = Math.max(0, 625 - (s.yield || 0));
+              const pct = Math.min(100, ((s.yield || 0) / 500) * 100);
+              const remaining = Math.max(0, 500 - (s.yield || 0));
               // Mini arc SVG
               const R = 32, cx = 38, cy = 38;
               const startDeg = -210, sweepDeg = 240;

@@ -37,7 +37,7 @@ const KPICard = ({ title, value, icon: Icon, colorClass, bgColorClass, suffix = 
 const PairedKPICard = ({ title, icon: Icon, colorClass, bgColorClass, topLabel, topValue, topSuffix = "", bottomLabel, bottomValue, bottomSuffix = "" }) => (
   <div className={`relative overflow-hidden rounded-3xl p-4 sm:p-5 shadow-sm flex flex-col transition-all hover:shadow-xl hover:-translate-y-1 duration-500 group bg-white border border-slate-100`}>
     <Icon className={`absolute -right-4 -bottom-4 w-32 h-32 opacity-[0.03] rotate-12 transition-transform group-hover:scale-110 duration-700 ${colorClass}`} />
-    
+
     <div className="flex items-center gap-2.5 mb-4">
       <div className={`shrink-0 p-2.5 rounded-xl ${bgColorClass} transition-colors group-hover:scale-105 duration-300`}>
         <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${colorClass}`} />
@@ -53,7 +53,7 @@ const PairedKPICard = ({ title, icon: Icon, colorClass, bgColorClass, topLabel, 
           {topSuffix && <span className="text-[10px] font-bold text-slate-400">{topSuffix}</span>}
         </div>
       </div>
-      
+
       <div className="h-px w-full bg-slate-100"></div>
 
       <div className="flex flex-col">
@@ -68,7 +68,7 @@ const PairedKPICard = ({ title, icon: Icon, colorClass, bgColorClass, topLabel, 
 );
 
 /* ── Premium Yield Target Card with Radial Arc ─────────────────────── */
-const YieldTargetCard = ({ currentYield = 0, targetYield = 2500 }) => {
+const YieldTargetCard = ({ currentYield = 0, targetYield = 2000 }) => {
   const pct = Math.min(100, (currentYield / targetYield) * 100);
   const remaining = Math.max(0, targetYield - currentYield);
 
@@ -79,23 +79,23 @@ const YieldTargetCard = ({ currentYield = 0, targetYield = 2500 }) => {
   const ptY = (a, r) => cy + r * Math.sin(toRad(a));
 
   const endFullDeg = startDeg + sweepDeg;
-  const endPctDeg  = startDeg + sweepDeg * (pct / 100);
-  const largeArc   = sweepDeg * (pct / 100) > 180 ? 1 : 0;
+  const endPctDeg = startDeg + sweepDeg * (pct / 100);
+  const largeArc = sweepDeg * (pct / 100) > 180 ? 1 : 0;
 
   const bgArc = `M ${ptX(startDeg, R)} ${ptY(startDeg, R)} A ${R} ${R} 0 1 1 ${ptX(endFullDeg, R)} ${ptY(endFullDeg, R)}`;
   const fgArc = pct > 0.5 ? `M ${ptX(startDeg, R)} ${ptY(startDeg, R)} A ${R} ${R} 0 ${largeArc} 1 ${ptX(endPctDeg, R)} ${ptY(endPctDeg, R)}` : null;
 
-  const stroke    = pct < 40 ? '#f43f5e' : pct < 75 ? '#f59e0b' : '#8b5cf6';
-  const badgeCls  = pct < 40 ? 'bg-rose-50 text-rose-600 border-rose-100'
-                  : pct < 75 ? 'bg-amber-50 text-amber-600 border-amber-100'
-                  : 'bg-purple-50 text-purple-600 border-purple-100';
+  const stroke = pct < 40 ? '#f43f5e' : pct < 75 ? '#f59e0b' : '#8b5cf6';
+  const badgeCls = pct < 40 ? 'bg-rose-50 text-rose-600 border-rose-100'
+    : pct < 75 ? 'bg-amber-50 text-amber-600 border-amber-100'
+      : 'bg-purple-50 text-purple-600 border-purple-100';
 
   const milestones = [25, 50, 75];
 
   return (
     <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-8 h-full">
       <div className="absolute -right-10 -top-10 w-64 h-64 rounded-full blur-3xl opacity-[0.05] group-hover:opacity-[0.12] transition-opacity duration-700" style={{ background: stroke }} />
-      
+
       {/* Left: Text Details */}
       <div className="flex-1 flex flex-col min-w-0 z-10 order-2 sm:order-1 items-center sm:items-start text-center sm:text-left">
         <p className="text-xs sm:text-sm font-black text-slate-400 uppercase tracking-widest mb-2">Total Expected Yield</p>
@@ -180,7 +180,7 @@ const KPIGrid = ({ stats }) => {
       <div className="w-full">
         <YieldTargetCard
           currentYield={stats.totalYield || 0}
-          targetYield={stats.targetYield || 2500}
+          targetYield={stats.targetYield || 2000}
         />
       </div>
     </div>
